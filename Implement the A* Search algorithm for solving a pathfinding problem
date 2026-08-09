@@ -1,0 +1,82 @@
+Aim : Implement the A* Search algorithm for solving a pathfinding
+problem.
+
+import heapq
+
+# Graph represented as adjacency list
+graph = {
+&#39;S&#39;: [(&#39;B&#39;, 4), (&#39;C&#39;, 3)],
+&#39;B&#39;: [(&#39;F&#39;, 5), (&#39;E&#39;, 12)],
+&#39;C&#39;: [(&#39;E&#39;, 10), (&#39;D&#39;, 7)],
+&#39;D&#39;: [(&#39;E&#39;, 2)],
+&#39;E&#39;: [(&#39;G&#39;, 5)],
+&#39;F&#39;: [(&#39;G&#39;, 16)],
+&#39;G&#39;: []
+}
+
+# Heuristic values
+heuristic = {
+&#39;S&#39;: 14,
+&#39;B&#39;: 12,
+&#39;C&#39;: 11,
+&#39;D&#39;: 6,
+&#39;E&#39;: 4,
+&#39;F&#39;: 11,
+&#39;G&#39;: 0
+}
+
+def a_star(start, goal):
+
+# Priority Queue
+open_list = []
+heapq.heappush(open_list, (heuristic[start], start))
+
+# Cost from start
+g_cost = {start: 0}
+
+# Parent dictionary
+parent = {start: None}
+
+visited = set()
+
+while open_list:
+
+# Get node with smallest f(n)
+f, current = heapq.heappop(open_list)
+
+if current == goal:
+break
+
+if current in visited:
+continue
+
+visited.add(current)
+
+for neighbor, cost in graph[current]:
+
+new_g = g_cost[current] + cost
+
+if neighbor not in g_cost or new_g &lt; g_cost[neighbor]:
+g_cost[neighbor] = new_g
+
+f_cost = new_g + heuristic[neighbor]
+
+heapq.heappush(open_list, (f_cost, neighbor))
+
+parent[neighbor] = current
+
+# Reconstruct path
+path = []
+node = goal
+
+while node is not None:
+path.append(node)
+node = parent[node]
+
+path.reverse()
+
+print(&quot;Optimal Path:&quot;, &quot; -&gt; &quot;.join(path))
+print(&quot;Total Cost:&quot;, g_cost[goal])
+
+# Driver Code
+a_star(&#39;S&#39;, &#39;G&#39;)
