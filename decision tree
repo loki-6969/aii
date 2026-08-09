@@ -1,0 +1,56 @@
+import pandas as pd # Import Pandas library to work with data tables
+from sklearn.model_selection import train_test_split # Import function to split the dataset
+from sklearn.tree import DecisionTreeClassifier # Import Decision Tree algorithm
+
+# Step 1: Load the dataset
+df = pd.read_csv(&quot;C:/Users/ictc/Machine learning Practicals/dataset.csv&quot;) # Read
+the CSV file and store it in a DataFrame
+
+# Step 2: Convert text values into numbers
+# Machine Learning algorithms work with numerical data
+df = df.replace({
+&quot;Lunch&quot;: 0,
+&quot;Dinner&quot;: 1,
+&quot;Yes&quot;: 1,
+&quot;No&quot;: 0,
+&quot;Short&quot;: 0,
+&quot;Long&quot;: 1
+})
+
+# Step 3: Separate input and output
+X = df.drop(&quot;Will_Wait&quot;, axis=1) # Input features (remove target column)
+y = df[&quot;Will_Wait&quot;] # Target column (output)
+
+# Step 4: Split the dataset
+# 70% data is used for training and 30% for testing
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size=0.3, random_state=42
+)
+
+# Step 5: Create the Decision Tree model
+model = DecisionTreeClassifier()
+
+# Step 6: Train the model using training data
+
+model.fit(X_train, y_train)
+
+# Step 7: Predict the output for test data
+prediction = model.predict(X_test)
+
+# Step 8: Display the predicted results
+print(&quot;Predicted Values:&quot;, prediction)
+
+# Step 9: Display the model accuracy
+print(&quot;Accuracy:&quot;, model.score(X_test, y_test))
+
+# Step 10: Display the Decision Tree
+import matplotlib.pyplot as plt # Library for plotting graphs
+from sklearn.tree import plot_tree # Function to draw the Decision Tree
+
+plt.figure(figsize=(8,6)) # Set the figure size
+plot_tree(model, # Draw the trained Decision Tree
+feature_names=X.columns, # Display feature names
+class_names=[&quot;No&quot;, &quot;Yes&quot;], # Display class names
+filled=True) # Fill nodes with colors
+
+plt.show() # Show the Decision Tree
