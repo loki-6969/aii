@@ -1,0 +1,35 @@
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F', 'G'],
+    'D': ['H'],
+    'E': [],
+    'F': [],
+    'G': [],
+    'H': []
+}
+
+def DLS(node, depth):
+    if depth < 0:
+        return
+    print(node, end="")
+    if depth == 0:
+        return
+    for neighbour in graph[node]:
+        DLS(neighbour, depth - 1)
+
+def iddfs(start, max_depth):
+    for depth in range(max_depth + 1):
+        print("\nDepth Limit =", depth)
+        DLS(start, depth)
+
+iddfs('A', 3)
+
+Depth Limit = 0
+A
+Depth Limit = 1
+ABC
+Depth Limit = 2
+ABCDE...FG
+Depth Limit = 3
+ABCDEFGH
