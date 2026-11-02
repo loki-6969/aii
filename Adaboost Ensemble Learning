@@ -1,0 +1,70 @@
+
+# AdaBoost Ensemble Learning using Iris Dataset
+
+# Import required libraries
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.metrics import accuracy_score
+
+
+# STEP 1: LOAD THE IRIS DATASET
+iris = load_iris()
+
+X = iris.data
+y = iris.target
+
+
+# STEP 2: SPLIT THE DATASET
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.3,
+    random_state=42
+)
+
+
+# STEP 3: CREATE AN INDIVIDUAL WEAK CLASSIFIER
+weak_classifier = DecisionTreeClassifier(
+    max_depth=1,
+    random_state=42
+)
+
+# Train the weak classifier
+weak_classifier.fit(X_train, y_train)
+
+# Predict the test data
+weak_prediction = weak_classifier.predict(X_test)
+
+# Calculate accuracy
+weak_accuracy = accuracy_score(y_test, weak_prediction)
+
+# Display accuracy
+print("Accuracy of Individual Weak Classifier:", weak_accuracy)
+
+
+# STEP 4: CREATE THE ADABOOST ENSEMBLE
+ada_model = AdaBoostClassifier(
+    estimator=DecisionTreeClassifier(max_depth=1),
+    n_estimators=50,
+    random_state=42
+)
+
+# Train the AdaBoost model
+ada_model.fit(X_train, y_train)
+
+# Predict the test data
+ada_prediction = ada_model.predict(X_test)
+
+# Calculate accuracy
+ada_accuracy = accuracy_score(y_test, ada_prediction)
+
+# Display accuracy
+print("Accuracy of AdaBoost Ensemble:", ada_accuracy)
+
+
+# STEP 5: COMPARE BOTH CLASSIFIERS
+print("\nComparison:")
+
+print("Weak Classifier Accuracy:", weak_accuracy)
+print("AdaBoost Accuracy:", ada_accuracy)
