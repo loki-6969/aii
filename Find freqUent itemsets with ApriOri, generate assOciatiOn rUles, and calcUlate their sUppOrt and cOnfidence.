@@ -1,0 +1,32 @@
+transactions = [
+{'bread', 'milk'},
+{'bread', 'diaper', 'beer', 'eggs'},
+{'milk', 'diaper', 'beer', 'cola'},
+{'bread', 'milk', 'diaper', 'beer'},
+{'bread', 'milk', 'diaper', 'cola'},
+]
+min_support, min_conf = 0.4, 0.7 N = len(transactions)
+
+def support(itemset):
+return sum(1 for t in transactions if itemset <= t) / N
+
+---- Step 1: frequent itemsets (Apriori) ----items = sorted({i for t in transactions for i in t})
+current = [frozenset([i]) for i in items if support({i}) >= min_support] frequent = {}
+k = 1
+while current:
+for s in current: frequent[s] = support(s)
+k += 1
+candidates = {a | b for a in current for b in current if len(a | b) == k} current = [c for c in candidates if support(c) >= min_support]
+
+print("Frequent itemsets:")
+for s, sup in sorted(frequent.items(), key=lambda x: (len(x[0]), -x[1])): print(f" {set(s)} support={sup:.2f}")
+
+---- Step 2: association rules ----print("\nAssociation rules:")
+for s in frequent: if len(s) < 2:
+continue
+for r in range(1, len(s)):
+for ante in combinations(s, r): ante = frozenset(ante) cons = s - ante
+conf = frequent[s] / support(ante) lift = conf / support(cons)
+if conf >= min_conf:
+print(f" {set(ante)} -> {set(cons)} support=
+{frequent[s]:.2f} confidence={conf:.2f} lift={lift:.2f}")
