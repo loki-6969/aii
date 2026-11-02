@@ -1,0 +1,58 @@
+
+# Import required libraries
+import tensorflow as tf
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_digits
+from sklearn.model_selection import train_test_split
+
+# Load Digits dataset
+digits = load_digits()
+
+# Normalize the data
+X = digits.data / 16.0
+y = digits.target
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Build ANN model
+model = tf.keras.Sequential([
+    tf.keras.layers.Input(shape=(64,)),
+    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(32, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+# Compile the model
+model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Display model summary
+model.summary()
+
+# Train the model
+history = model.fit(
+    X_train, y_train,
+    epochs=20,
+    validation_split=0.1,
+    verbose=2
+)
+
+# Evaluate the model
+loss, acc = model.evaluate(X_test, y_test, verbose=0)
+
+print("Test accuracy:", round(acc, 4))
+
+# Plot training and validation accuracy
+plt.plot(history.history['accuracy'], label='train')
+plt.plot(history.history['val_accuracy'], label='validation')
+
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.show()
