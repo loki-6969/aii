@@ -1,0 +1,42 @@
+# Import required libraries
+import pandas as pd
+# Used to divide data into training and testing sets
+from sklearn.model_selection import train_test_split
+# Import Support Vector Classifier
+from sklearn.svm import SVC
+# Used to evaluate the model
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+data = pd.read_csv("C:/Users/ictc/Machine learning Practicals/diabetes.csv")
+# Step 2: Display first 5 rows
+print(data.head())
+# Step 3: Separate input and output
+# X contains all input features
+X = data.drop("Outcome", axis=1)
+# y contains the output
+# 0 = No Diabetes
+# 1 = Diabetes
+y = data["Outcome"]
+# Step 4: Divide data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+ X, y,
+ test_size=0.20, # 20% data for testing
+ random_state=42 # Gives same split every time
+)
+# Step 5: Create SVM model
+model = SVC(kernel="linear")
+# Step 6: Train the model
+model.fit(X_train, y_train)
+# Step 7: Predict output for test data
+y_pred = model.predict(X_test)
+# Step 8: Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+# Step 9: Display confusion matrix
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+# Step 10: Display classification report
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+#Precision: Out of all patients predicted as diabetic, how many were actually diabetic?#Recall: Out of all patients who actually had diabetes, how many did the model correctly
+identify?
+#F1-score: Combination of precision and recall.
