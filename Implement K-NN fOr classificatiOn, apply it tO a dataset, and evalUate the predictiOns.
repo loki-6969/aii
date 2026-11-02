@@ -1,0 +1,18 @@
+import numpy as np
+from collections import Counter
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split from sklearn.neighbors import KNeighborsClassifier
+
+iris = load_iris()
+X_train, X_test, y_train, y_test = train_test_split(iris.data, iris.target, test_size=0.3, random_state=42)
+
+def knn_predict(x, k):
+dist = np.sqrt(((X_train - x) ** 2).sum(axis=1))	Euclidean distance
+nearest = np.argsort(dist)[:k]	k nearest indices
+return Counter(y_train[nearest]).most_common(1)[0][0]	majority vote
+
+print("From-scratch K-NN") for k in [1, 3, 5, 7, 9]:
+pred = np.array([knn_predict(x, k) for x in X_test]) print(f" k={k} accuracy = {(pred == y_test).mean():.4f}")
+
+sk = KNeighborsClassifier(n_neighbors=5).fit(X_train, y_train) print("\nsklearn K-NN (k=5) accuracy:", round(sk.score(X_test, y_test), 4))
+
