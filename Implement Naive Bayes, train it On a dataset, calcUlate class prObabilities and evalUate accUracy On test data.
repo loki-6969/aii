@@ -1,0 +1,41 @@
+
+# Import required libraries
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Load Iris dataset
+iris = load_iris()
+
+# Split dataset into training and testing data
+X_train, X_test, y_train, y_test = train_test_split(
+    iris.data, iris.target, test_size=0.3, random_state=42
+)
+
+# Create Gaussian Naive Bayes model
+nb = GaussianNB()
+
+# Train the model
+nb.fit(X_train, y_train)
+
+# Display class prior probabilities
+print("Class prior probabilities:",
+      {str(n): round(float(p), 3)
+       for n, p in zip(iris.target_names, nb.class_prior_)})
+
+# Predict probabilities for first 3 test samples
+proba = nb.predict_proba(X_test[:3])
+
+print("\nClass probabilities for first 3 test samples:")
+print(np.round(proba, 4))
+
+# Predict test data
+pred = nb.predict(X_test)
+
+# Display accuracy
+print("\nAccuracy:", round(accuracy_score(y_test, pred), 4))
+
+# Display confusion matrix
+print("Confusion Matrix:\n", confusion_matrix(y_test, pred))
